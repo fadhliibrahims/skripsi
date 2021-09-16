@@ -2,21 +2,23 @@ package com.example.testui
 
 import android.Manifest
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import androidx.fragment.app.Fragment
+import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -66,16 +68,16 @@ class KompresFragment : Fragment() {
 
     private fun askPermissionAndBrowseFile() {
         if (askForPermissions()) {
-            browseFile()
+            doBrowseFile()
         }
     }
 
     private fun askForPermissions(): Boolean {
         if (!isPermissionsAllowed()) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this as Activity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (activity?.let { ActivityCompat.shouldShowRequestPermissionRationale(it, Manifest.permission.READ_EXTERNAL_STORAGE) } == true) {
                 showPermissionDeniedDialog()
             } else {
-                ActivityCompat.requestPermissions(this as Activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), MY_REQUEST_CODE_PERMISSION)
+                activity?.let { ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), MY_REQUEST_CODE_PERMISSION) }
             }
             return false
         }
@@ -92,13 +94,13 @@ class KompresFragment : Fragment() {
         context?.let { AlertDialog.Builder(it)
             .setTitle("Permission Ditolak")
             .setMessage("Silahkan izinkan permission melalui App Settings.")
-            .setPositiveButton("App Settings", DialogInterface.OnClickListener { dialog, which ->
+            .setPositiveButton("App Settings") { dialog, which ->
                 val intent = Intent()
                 intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                 val uri = Uri.fromParts("package", requireContext().packageName, null)
                 intent.data = uri
                 startActivity(intent)
-            })
+            }
             .setNegativeButton("Cancel", null)
             .show()
         }
@@ -109,10 +111,12 @@ class KompresFragment : Fragment() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        println("Masuk")
         when (requestCode) {
             MY_REQUEST_CODE_PERMISSION -> {
-                if (grantResults.size>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED) {
-                    browseFile()
+                println("Masuk request code")
+                if (grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED) {
+                    doBrowseFile()
                 } else {
                     askForPermissions()
                 }
@@ -121,11 +125,41 @@ class KompresFragment : Fragment() {
         }
     }
 
-    private fun browseFile() {
+    private fun doBrowseFile() {
+        var chooseFileIntent = Intent(Intent.ACTION_GET_CONTENT)
+        chooseFileIntent.setType("*/*")
 
+        //Only Return URI that can be opened with ContentResolver
+        chooseFileIntent.addCategory(Intent.CATEGORY_OPENABLE)
+
+        chooseFileIntent = Intent.createChooser(chooseFileIntent, "Choose a File")
+        startActivityForResult(chooseFileIntent, MY_RESULT_CODE_FILECHOOSER)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            MY_RESULT_CODE_FILECHOOSER -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    if (data != null) {
+                        val fileUri = data.getData()
+                        Log.i(LOG_TAG, "Uri: " + fileUri)
 
+                        var filePath: String? = null
+                        try {
+                            if (fileUri != null) {
+                                filePath = fileUri.path
+                            }
+                        } catch (e: Exception) {
+                            Log.e(LOG_TAG, "Error: " + e)
+                            Toast.makeText(context, "Error: " + e, Toast.LENGTH_SHORT).show()
+                        }
+                        editTextPath.text = Editable.Factory.getInstance().newEditable(filePath)
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 
     companion object {
         /**
