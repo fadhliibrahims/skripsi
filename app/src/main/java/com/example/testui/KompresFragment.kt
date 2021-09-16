@@ -74,10 +74,10 @@ class KompresFragment : Fragment() {
 
     private fun askForPermissions(): Boolean {
         if (!isPermissionsAllowed()) {
-            if (activity?.let { ActivityCompat.shouldShowRequestPermissionRationale(it, Manifest.permission.READ_EXTERNAL_STORAGE) } == true) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 showPermissionDeniedDialog()
             } else {
-                activity?.let { ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), MY_REQUEST_CODE_PERMISSION) }
+                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), MY_REQUEST_CODE_PERMISSION)
             }
             return false
         }
@@ -111,10 +111,8 @@ class KompresFragment : Fragment() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        println("Masuk")
         when (requestCode) {
             MY_REQUEST_CODE_PERMISSION -> {
-                println("Masuk request code")
                 if (grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED) {
                     doBrowseFile()
                 } else {
