@@ -7,7 +7,7 @@ class Kompres {
         val charset = getCharsetFromText(text)
         val freqList = getFreqOfEachCharFromText(text, charset)
         val sortedCharset = insertionSort(charset, freqList)
-        var compressedText = text
+        var compressedBit = text
 
         if (algorithm == 0) {
 
@@ -15,9 +15,17 @@ class Kompres {
             val fibonacciCode = FibonacciCode()
             val fibonacciCodeList = fibonacciCode.generateFibonacciCodeList(charset.size)
             for(i in 0..sortedCharset.size-1) {
-                compressedText = compressedText.replace(sortedCharset[i].toString(), fibonacciCodeList[i])
+                compressedBit = compressedBit.replace(sortedCharset[i].toString(), fibonacciCodeList[i])
             }
         }
+
+        //Padding Bit and Flag Bit
+        val padLength = 8-(compressedBit.length%8)
+        val paddingBit = "0".repeat(padLength)
+        val flagBit = padLength.toString(2).padStart(8, '0')
+        compressedBit = compressedBit + paddingBit + flagBit
+        //Convert compressedBit to Text
+        var compressedText = asciiToText(compressedBit) + "|*|" + sortedCharset.joinToString("")
 
         return compressedText
     }
@@ -28,6 +36,19 @@ class Kompres {
             asciiStringBit += char.code.toString(2).padStart(8, '0')
         }
         return asciiStringBit
+    }
+
+    private fun asciiToText(asciiStringBit: String): String {
+        var text = ""
+        var asciiCode = ""
+        for(char in asciiStringBit) {
+            asciiCode = asciiCode + char
+            if(asciiCode.length == 8) {
+                text = text + Integer.parseInt(asciiCode, 2).toChar().toString()
+                asciiCode = ""
+            }
+        }
+        return text
     }
 
     private fun getCharsetFromText(text: String): ArrayList<Char> {

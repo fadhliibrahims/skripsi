@@ -47,7 +47,11 @@ class KompresFragment : Fragment() {
     private val MY_RESULT_CODE_FILECHOOSER = 2000
     private val LOG_TAG = "AndroidExample"
     private var algorithm = 1
+    private var originalText = ""
     private var compressedText = ""
+    private var originalPath = ""
+    private var originalSize = ""
+
 
     private lateinit var buttonBrowse: Button
     private lateinit var textViewPath: TextView
@@ -79,6 +83,7 @@ class KompresFragment : Fragment() {
             askPermissionAndBrowseFile()
         }
         textBox.movementMethod = ScrollingMovementMethod()
+        textBoxResult.movementMethod = ScrollingMovementMethod()
         textViewSize = view.findViewById(R.id.textView_size)
 
         buttonKompres = view.findViewById(R.id.button_kompres)
@@ -165,13 +170,13 @@ class KompresFragment : Fragment() {
                 if (resultCode == Activity.RESULT_OK) {
                     if (data != null) {
                         val fileUri = data.getData()
-                        val filePath = getPath(requireContext(), fileUri!!)!!
-                        val fileSize = File(filePath).length() / 1024.0
-                        val sizeInStr = "%.2f kb".format(fileSize)
+                        originalPath = getPath(requireContext(), fileUri!!)!!
+                        originalText = readText(originalPath)
+                        originalSize = "%.2f kb".format(File(originalPath).length() / 1024.0)
 
-                        textBox.text = readText(filePath)
-                        textViewPath.text = filePath
-                        textViewSize.text = sizeInStr
+                        textBox.text = originalText
+                        textViewPath.text = originalPath
+                        textViewSize.text = originalSize
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             textViewPath.setTextAppearance(R.style.TextAppearance_AppCompat_Body1)
                         }
@@ -289,9 +294,8 @@ class KompresFragment : Fragment() {
     }
 
     private fun kompresTeks() {
-        val text = textBox.text.toString()
         val kompres = Kompres()
-        compressedText = kompres.kompresText(text, algorithm)
+        compressedText = kompres.kompresText(originalText, algorithm)
         textBoxResult.text = compressedText
     }
 
