@@ -27,6 +27,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import java.io.*
+import android.content.Context.MODE_PRIVATE
+
+
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,7 +49,7 @@ class KompresFragment : Fragment() {
 
     private val MY_REQUEST_CODE_PERMISSION = 1000
     private val MY_RESULT_CODE_FILECHOOSER = 2000
-    private val LOG_TAG = "AndroidExample"
+    private val MY_WRITE_REQUEST_CODE_PERMISSION = 3000
     private var algorithm = 1
     private var originalText = ""
     private var compressedText = ""
@@ -59,6 +63,7 @@ class KompresFragment : Fragment() {
     private lateinit var textBoxResult: TextView
     private lateinit var textViewSize: TextView
     private lateinit var buttonKompres: Button
+    private lateinit var buttonSave: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +94,11 @@ class KompresFragment : Fragment() {
         buttonKompres = view.findViewById(R.id.button_kompres)
         buttonKompres.setOnClickListener {
             kompresTeks()
+        }
+
+        buttonSave = view.findViewById(R.id.button_save)
+        buttonSave.setOnClickListener {
+            saveHasil()
         }
 
         return view
@@ -146,6 +156,14 @@ class KompresFragment : Fragment() {
                     doBrowseFile()
                 } else {
                     askForPermissions()
+                }
+                return
+            }
+            MY_WRITE_REQUEST_CODE_PERMISSION -> {
+                if (grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED) {
+                    doSaveFile()
+                } else {
+                    saveHasil()
                 }
                 return
             }
@@ -299,6 +317,46 @@ class KompresFragment : Fragment() {
         textBoxResult.text = compressedText
     }
 
+    private fun askPermissionsToSave(): Boolean {
+        if(Build.VERSION.SDK_INT>22){
+            if (!isWritingPermissionsAllowed()) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    showPermissionDeniedDialog()
+                } else {
+                    requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), MY_WRITE_REQUEST_CODE_PERMISSION)
+                }
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun saveHasil() {
+        if (askPermissionsToSave()) {
+            doSaveFile()
+        }
+    }
+
+    private fun isWritingPermissionsAllowed(): Boolean {
+        return context?.let {
+            ContextCompat.checkSelfPermission(it, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        } == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun doSaveFile() {
+        var directory = Environment.getExternalStorageDirectory().absolutePath
+        var fullName = originalPath.substring(originalPath.lastIndexOf("/")+1)
+        var fileName = fullName.substringBeforeLast(".") + ".fcf"
+        var externalFile = File(directory, fileName)
+        return try {
+            val fileOutPutStream = FileOutputStream(externalFile)
+            fileOutPutStream.write(textBoxResult.text.toString().toByteArray())
+            fileOutPutStream.close()
+            Toast.makeText(requireContext(), "file saved to" + directory + "/$fileName", Toast.LENGTH_LONG).show()
+        } catch(e: IOException) {
+            e.printStackTrace()
+        }
+    }
 //    companion object {
 //        /**
 //         * Use this factory method to create a new instance of
