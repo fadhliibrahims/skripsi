@@ -28,9 +28,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import java.io.*
 import android.content.Context.MODE_PRIVATE
-
-
-
+import kotlin.system.measureTimeMillis
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,7 +52,9 @@ class KompresFragment : Fragment() {
     private var originalText = ""
     private var compressedText = ""
     private var originalPath = ""
-    private var originalSize = ""
+    private var originalSize = 0L
+    private var compressedSize = 0L
+    private var compressionRatio = 0F
 
 
     private lateinit var buttonBrowse: Button
@@ -64,6 +64,9 @@ class KompresFragment : Fragment() {
     private lateinit var textViewSize: TextView
     private lateinit var buttonKompres: Button
     private lateinit var buttonSave: Button
+    private lateinit var textViewResultSize: TextView
+    private lateinit var textViewCR: TextView
+    private lateinit var textViewWaktuKompresi: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,13 +96,20 @@ class KompresFragment : Fragment() {
 
         buttonKompres = view.findViewById(R.id.button_kompres)
         buttonKompres.setOnClickListener {
-            kompresTeks()
+            val time = measureTimeMillis {
+                kompresTeks()
+            }
+            textViewWaktuKompresi.text = "%o ms".format(time)
         }
 
         buttonSave = view.findViewById(R.id.button_save)
         buttonSave.setOnClickListener {
             saveHasil()
         }
+
+        textViewResultSize = view.findViewById(R.id.textView_resultSize)
+        textViewCR = view.findViewById(R.id.textView_cr)
+        textViewWaktuKompresi = view.findViewById(R.id.textView_waktuKompresi)
 
         return view
     }
@@ -190,11 +200,11 @@ class KompresFragment : Fragment() {
                         val fileUri = data.getData()
                         originalPath = getPath(requireContext(), fileUri!!)!!
                         originalText = readText(originalPath)
-                        originalSize = "%.2f kb".format(File(originalPath).length() / 1024.0)
+                        originalSize = File(originalPath).length()
 
                         textBox.text = originalText
                         textViewPath.text = originalPath
-                        textViewSize.text = originalSize
+                        textViewSize.text = "%.2f kb".format(originalSize / 1024.0)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             textViewPath.setTextAppearance(R.style.TextAppearance_AppCompat_Body1)
                         }
@@ -351,6 +361,10 @@ class KompresFragment : Fragment() {
         return try {
             val fileOutPutStream = FileOutputStream(externalFile)
             fileOutPutStream.write(textBoxResult.text.toString().toByteArray())
+            compressedSize = File(directory + "/$fileName").length()
+            compressionRatio = originalSize * 1F / compressedSize
+            textViewResultSize.text = "%.2f kb".format(compressedSize / 1024.0)
+            textViewCR.text = "%.2f".format(compressionRatio)
             fileOutPutStream.close()
             Toast.makeText(requireContext(), "file saved to" + directory + "/$fileName", Toast.LENGTH_LONG).show()
         } catch(e: IOException) {
