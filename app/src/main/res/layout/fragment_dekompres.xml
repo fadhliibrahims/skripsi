@@ -76,16 +76,17 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="@+id/textView2Dekompresi"
-        app:layout_constraintTop_toBottomOf="@+id/textView2Dekompresi">
+        app:layout_constraintTop_toBottomOf="@+id/textView2Dekompresi"
+        android:checkedButton="@id/fibonacciCodeDekompresi">
 
         <RadioButton
-            android:id="@+id/radioButtonDekompresi"
+            android:id="@+id/stoutCodeDekompresi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Stout Code" />
 
         <RadioButton
-            android:id="@+id/radioButton2Dekompresi"
+            android:id="@+id/fibonacciCodeDekompresi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Fibonacci Code" />
@@ -95,10 +96,23 @@
         android:id="@+id/button_dekompres"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Dekompres File"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_saveDekompresi"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroupDekompresi" />
+
+    <Button
+        android:id="@+id/button_saveDekompresi"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button_dekompres"
+        app:layout_constraintTop_toTopOf="@+id/button_dekompres" />
 
     <TextView
         android:id="@+id/textView4Dekompresi"

@@ -15,7 +15,6 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.method.ScrollingMovementMethod
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +26,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import java.io.*
-import android.content.Context.MODE_PRIVATE
 import kotlin.system.measureTimeMillis
 
 // TODO: Rename parameter arguments, choose names that match
