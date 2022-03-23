@@ -74,24 +74,22 @@
         android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:checkedButton="@id/stoutCode"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        android:checkedButton="@id/fibonacciCode">
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <RadioButton
             android:id="@+id/stoutCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Stout Code"
-            android:onClick="onRadioButtonClicked"/>
+            android:text="Stout Code" />
 
         <RadioButton
             android:id="@+id/fibonacciCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fibonacci Code"
-            android:onClick="onRadioButtonClicked"/>
+            android:text="Fibonacci Code" />
     </RadioGroup>
 
     <Button

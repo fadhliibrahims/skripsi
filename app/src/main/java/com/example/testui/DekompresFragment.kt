@@ -19,10 +19,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import java.io.*
@@ -46,7 +43,7 @@ class DekompresFragment : Fragment() {
     private val MY_REQUEST_CODE_PERMISSION = 1000
     private val MY_RESULT_CODE_FILECHOOSER = 2000
     private val MY_WRITE_REQUEST_CODE_PERMISSION = 3000
-    private var algorithm = 1
+    private var algorithm = 0
     private var originalText = ""
     private var compressedText = ""
     private var filePath = ""
@@ -60,6 +57,7 @@ class DekompresFragment : Fragment() {
     private lateinit var textBox: TextView
     private lateinit var textBoxResult: TextView
     private lateinit var textViewSize: TextView
+    private lateinit var radioGroup: RadioGroup
     private lateinit var buttonDekompres: Button
     private lateinit var buttonSave: Button
 //    private lateinit var textViewResultSize: TextView
@@ -91,6 +89,15 @@ class DekompresFragment : Fragment() {
         textBox.movementMethod = ScrollingMovementMethod()
         textBoxResult.movementMethod = ScrollingMovementMethod()
         textViewSize = view.findViewById(R.id.textView_sizeDekompresi)
+
+        radioGroup = view.findViewById(R.id.radioGroupDekompresi)
+        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
+                R.id.stoutCodeDekompresi -> algorithm = 0
+                R.id.fibonacciCodeDekompresi -> algorithm = 1
+            }
+        }
+
 
         buttonDekompres = view.findViewById(R.id.button_dekompres)
         buttonDekompres.setOnClickListener {
@@ -300,24 +307,24 @@ class DekompresFragment : Fragment() {
     }
     //endregion
 
-    fun onRadioButtonClicked(view: View) {
-        if (view is RadioButton) {
-            // Is the button now checked?
-            val checked = view.isChecked
-
-            // Check which radio button was clicked
-            when (view.getId()) {
-                R.id.stoutCode ->
-                    if (checked) {
-                        algorithm = 0
-                    }
-                R.id.fibonacciCode ->
-                    if (checked) {
-                        algorithm = 1
-                    }
-            }
-        }
-    }
+//    fun onRadioButtonClicked(view: View) {
+//        if (view is RadioButton) {
+//            // Is the button now checked?
+//            val checked = view.isChecked
+//
+//            // Check which radio button was clicked
+//            when (view.getId()) {
+//                R.id.stoutCode ->
+//                    if (checked) {
+//                        algorithm = 0
+//                    }
+//                R.id.fibonacciCode ->
+//                    if (checked) {
+//                        algorithm = 1
+//                    }
+//            }
+//        }
+//    }
 
     private fun dekompresTeks() {
         val dekompres = Dekompres()

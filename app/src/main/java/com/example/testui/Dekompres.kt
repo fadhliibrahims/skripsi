@@ -19,6 +19,40 @@ class Dekompres {
         compressedBit2 = compressedBit2.dropLast(padLength2+8)
 
         if (algorithm == 0) {
+            //Generate Table Encoding
+            val l2 = 2
+            val amountOfCode2 = charset2.length
+            val stoutCode = StoutCode()
+            val stoutCodeList2 = stoutCode.generateStoutCodeList(amountOfCode2, l2)
+            val encodingTable2 = HashMap<String, Char>()
+            for(i in 0..charset2.length-1) {
+                encodingTable2[stoutCodeList2[i]] = charset2[i]
+            }
+            println(encodingTable2)
+
+            //Decompression
+            var counter = 0
+            var x = ""
+            var y = ""
+            var bigL = 0
+            while(counter < compressedBit2.length) {
+                x = compressedBit2.substring(counter, counter+l2+1)
+//         print("x: " + x + "   ")
+                y = compressedBit2.substring(counter, counter+l2)
+//         println("y: " + y)
+                counter = counter + l2+1
+                while(encodingTable2.containsKey(x)==false) {
+                    bigL = binaryToDecimal(y.toLong()) + 1 + l2
+//             println("bigL: " + bigL)
+                    x = x + compressedBit2.substring(counter, counter+bigL)
+//             print("x: " + x + "   ")
+                    y = compressedBit2.substring(counter-1, counter+bigL-1)
+//             println("y: " + y)
+                    counter = counter + bigL
+                }
+                decompressedText = decompressedText + encodingTable2[x]
+//         println(decompressedText)
+            }
 
         } else if (algorithm == 1) {
 //            val fibonacciCode = FibonacciCode()
@@ -107,6 +141,22 @@ class Dekompres {
         }
         return freqList
     }
+
+    private fun binaryToDecimal(num: Long): Int {
+        var num = num
+        var decimal = 0
+        var i = 0
+        var remainder: Long
+
+        while (num.toInt() != 0) {
+            remainder = num % 10
+            num /= 10
+            decimal += (remainder * Math.pow(2.0, i.toDouble())).toInt()
+            ++i
+        }
+        return decimal
+    }
+
 
     private fun insertionSort(charset: ArrayList<Char>, freqList:ArrayList<Int>): ArrayList<Char>{
         if (freqList.isEmpty() || freqList.size<2){

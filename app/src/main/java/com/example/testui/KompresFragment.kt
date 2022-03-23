@@ -18,10 +18,7 @@ import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -46,7 +43,7 @@ class KompresFragment : Fragment() {
     private val MY_REQUEST_CODE_PERMISSION = 1000
     private val MY_RESULT_CODE_FILECHOOSER = 2000
     private val MY_WRITE_REQUEST_CODE_PERMISSION = 3000
-    private var algorithm = 1
+    private var algorithm = 0
     private var originalText = ""
     private var compressedText = ""
     private var originalPath = ""
@@ -60,6 +57,7 @@ class KompresFragment : Fragment() {
     private lateinit var textBox: TextView
     private lateinit var textBoxResult: TextView
     private lateinit var textViewSize: TextView
+    private lateinit var radioGroup: RadioGroup
     private lateinit var buttonKompres: Button
     private lateinit var buttonSave: Button
     private lateinit var textViewResultSize: TextView
@@ -91,6 +89,14 @@ class KompresFragment : Fragment() {
         textBox.movementMethod = ScrollingMovementMethod()
         textBoxResult.movementMethod = ScrollingMovementMethod()
         textViewSize = view.findViewById(R.id.textView_size)
+
+        radioGroup = view.findViewById(R.id.radioGroup)
+        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
+                R.id.stoutCode -> algorithm = 0
+                R.id.fibonacciCode -> algorithm = 1
+            }
+        }
 
         buttonKompres = view.findViewById(R.id.button_kompres)
         buttonKompres.setOnClickListener {
@@ -300,24 +306,24 @@ class KompresFragment : Fragment() {
     }
     //endregion
 
-    fun onRadioButtonClicked(view: View) {
-        if (view is RadioButton) {
-            // Is the button now checked?
-            val checked = view.isChecked
-
-            // Check which radio button was clicked
-            when (view.getId()) {
-                R.id.stoutCode ->
-                    if (checked) {
-                        algorithm = 0
-                    }
-                R.id.fibonacciCode ->
-                    if (checked) {
-                        algorithm = 1
-                    }
-            }
-        }
-    }
+//    fun onCheckedChangeListener(view: View): RadioGroup.OnCheckedChangeListener? {
+//        if (view is RadioButton) {
+//            // Is the button now checked?
+//            val checked = view.isChecked
+//
+//            // Check which radio button was clicked
+//            when (view.getId()) {
+//                R.id.stoutCode ->
+//                    if (checked) {
+//                        algorithm = 0
+//                    }
+//                R.id.fibonacciCode ->
+//                    if (checked) {
+//                        algorithm = 1
+//                    }
+//            }
+//        }
+//    }
 
     private fun kompresTeks() {
         val kompres = Kompres()
@@ -354,7 +360,11 @@ class KompresFragment : Fragment() {
     private fun doSaveFile() {
         var directory = Environment.getExternalStorageDirectory().absolutePath
         var fullName = originalPath.substring(originalPath.lastIndexOf("/")+1)
-        var fileName = fullName.substringBeforeLast(".") + ".fcf"
+        var fileName = ""
+        when (algorithm) {
+            0 -> fileName = fullName.substringBeforeLast(".") + ".scf"
+            1 -> fileName = fullName.substringBeforeLast(".") + ".fcf"
+        }
         var externalFile = File(directory, fileName)
         return try {
             val fileOutPutStream = FileOutputStream(externalFile)

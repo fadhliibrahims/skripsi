@@ -7,15 +7,37 @@ class Kompres {
         val charset = getCharsetFromText(text)
         val freqList = getFreqOfEachCharFromText(text, charset)
         val sortedCharset = insertionSort(charset, freqList)
-        var compressedBit = text
+        var compressedBit = ""
 
         if (algorithm == 0) {
+            //Generate Stout Code
+            val stoutCode = StoutCode()
+            val stoutCodeList = stoutCode.generateStoutCodeList(charset.size, 2)
 
+            //Create Encoding Table
+            val encodingTable = HashMap<Char, String>()
+            for(i in 0..sortedCharset.size-1) {
+                encodingTable[sortedCharset[i]] = stoutCodeList[i]
+            }
+
+            //Compression
+            for(i in 0..text.length-1) {
+                compressedBit = compressedBit + encodingTable[text[i]]
+            }
         } else if (algorithm == 1) {
+            //Generate Fibonacci Code
             val fibonacciCode = FibonacciCode()
             val fibonacciCodeList = fibonacciCode.generateFibonacciCodeList(charset.size)
+
+            //Create Encoding Table
+            val encodingTable = HashMap<Char, String>()
             for(i in 0..sortedCharset.size-1) {
-                compressedBit = compressedBit.replace(sortedCharset[i].toString(), fibonacciCodeList[i])
+                encodingTable[sortedCharset[i]] = fibonacciCodeList[i]
+            }
+
+            //Compression
+            for(i in 0..text.length-1) {
+                compressedBit = compressedBit + encodingTable[text[i]]
             }
         }
 
