@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/kompresFragment"
-        android:name="com.example.testui.KompresFragment"
+        android:name="com.example.skripsi.KompresFragment"
         android:label="fragment_kompres"
         tools:layout="@layout/fragment_kompres" />
     <fragment
         android:id="@+id/dekompresFragment"
-        android:name="com.example.testui.DekompresFragment"
+        android:name="com.example.skripsi.DekompresFragment"
         android:label="fragment_dekompres"
         tools:layout="@layout/fragment_dekompres" />
 </navigation>

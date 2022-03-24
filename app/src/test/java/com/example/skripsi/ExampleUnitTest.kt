@@ -1,4 +1,4 @@
-package com.example.testui
+package com.example.skripsi
 
 import org.junit.Test
 

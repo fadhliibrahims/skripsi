@@ -47,7 +47,7 @@
         android:id="@+id/textViewDekompresi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Besar File         :"
+        android:text="Besar File Terkompresi :"
         app:layout_constraintStart_toStartOf="@+id/textBoxDekompresi"
         app:layout_constraintTop_toBottomOf="@+id/textBoxDekompresi" />
 
@@ -99,29 +99,19 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="Dekompres File"
-        app:layout_constraintEnd_toStartOf="@+id/button_saveDekompresi"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroupDekompresi" />
-
-    <Button
-        android:id="@+id/button_saveDekompresi"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Save"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button_dekompres"
-        app:layout_constraintTop_toTopOf="@+id/button_dekompres" />
 
     <TextView
         android:id="@+id/textView4Dekompresi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Waktu Dekompresi       :"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_dekompres" />
+        app:layout_constraintTop_toBottomOf="@+id/textView5Dekompresi" />
 
     <TextView
         android:id="@+id/textView_waktuDekompresi"
@@ -138,32 +128,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Hasil Dekompresi         :"
+        android:text="Size Hasil Dekompresi :"
         app:layout_constraintStart_toStartOf="@+id/textView4Dekompresi"
-        app:layout_constraintTop_toBottomOf="@+id/textView4Dekompresi" />
+        app:layout_constraintTop_toBottomOf="@+id/button_dekompres" />
 
     <TextView
-        android:id="@+id/textView_resultPathDekompresi"
+        android:id="@+id/textView_resultSizeDekompresi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        tools:text="/storage/emulated/0/ADM/bruh.sc"
         app:layout_constraintBottom_toBottomOf="@+id/textView5Dekompresi"
         app:layout_constraintStart_toEndOf="@+id/textView5Dekompresi"
-        app:layout_constraintTop_toTopOf="@id/textView5Dekompresi" />
+        app:layout_constraintTop_toTopOf="@id/textView5Dekompresi"
+        tools:text="3kb" />
 
-    <TextView
-        android:id="@+id/textBox_resultDekompresi"
-        android:layout_width="0dp"
-        android:layout_height="130dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="#EDE4E4"
-        android:outlineProvider="paddedBounds"
-        android:scrollbars="vertical"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5Dekompresi" />
 </androidx.constraintlayout.widget.ConstraintLayout>

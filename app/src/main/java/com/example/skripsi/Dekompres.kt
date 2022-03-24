@@ -1,4 +1,4 @@
-package com.example.testui
+package com.example.skripsi
 
 class Dekompres {
     fun dekompresText(compressedText: String, algorithm: Int): String {

@@ -1,4 +1,4 @@
-package com.example.testui
+package com.example.skripsi
 
 import android.Manifest
 import android.app.Activity
@@ -15,13 +15,13 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.method.ScrollingMovementMethod
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import java.io.*
 import kotlin.system.measureTimeMillis
 
@@ -32,11 +32,11 @@ import kotlin.system.measureTimeMillis
 
 /**
  * A simple [Fragment] subclass.
- * Use the [KompresFragment.newInstance] factory method to
+ * Use the [DekompresFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class KompresFragment : Fragment() {
-//    // TODO: Rename and change types of parameters
+class DekompresFragment : Fragment() {
+    // TODO: Rename and change types of parameters
 //    private var param1: String? = null
 //    private var param2: String? = null
 
@@ -46,23 +46,22 @@ class KompresFragment : Fragment() {
     private var algorithm = 0
     private var originalText = ""
     private var compressedText = ""
-    private var originalPath = ""
+    private var filePath = ""
     private var originalSize = 0L
     private var compressedSize = 0L
-    private var compressionRatio = 0F
+//    private var compressionRatio = 0F
 
 
     private lateinit var buttonBrowse: Button
     private lateinit var textViewPath: TextView
     private lateinit var textBox: TextView
-    private lateinit var textBoxResult: TextView
     private lateinit var textViewSize: TextView
-    private lateinit var radioGroup: RadioGroup
-    private lateinit var buttonKompres: Button
-    private lateinit var buttonSave: Button
     private lateinit var textViewResultSize: TextView
-    private lateinit var textViewCR: TextView
-    private lateinit var textViewWaktuKompresi: TextView
+    private lateinit var radioGroup: RadioGroup
+    private lateinit var buttonDekompres: Button
+//    private lateinit var textViewResultSize: TextView
+//    private lateinit var textViewCR: TextView
+    private lateinit var textViewWaktuDekompresi: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,43 +76,39 @@ class KompresFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_kompres, container, false)
-        textViewPath = view.findViewById(R.id.textView_path)
-        buttonBrowse = view.findViewById(R.id.button_browse)
-        textBox = view.findViewById(R.id.textBox)
-        textBoxResult = view.findViewById(R.id.textBox_result)
+        val view = inflater.inflate(R.layout.fragment_dekompres, container, false)
+        textViewPath = view.findViewById(R.id.textView_pathDekompresi)
+        buttonBrowse = view.findViewById(R.id.button_browseDekompresi)
+        textBox = view.findViewById(R.id.textBoxDekompresi)
 
         buttonBrowse.setOnClickListener {
             askPermissionAndBrowseFile()
         }
         textBox.movementMethod = ScrollingMovementMethod()
-        textBoxResult.movementMethod = ScrollingMovementMethod()
-        textViewSize = view.findViewById(R.id.textView_size)
+        textViewSize = view.findViewById(R.id.textView_sizeDekompresi)
+        textViewResultSize = view.findViewById(R.id.textView_resultSizeDekompresi)
 
-        radioGroup = view.findViewById(R.id.radioGroup)
+        radioGroup = view.findViewById(R.id.radioGroupDekompresi)
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
-                R.id.stoutCode -> algorithm = 0
-                R.id.fibonacciCode -> algorithm = 1
+                R.id.stoutCodeDekompresi -> algorithm = 0
+                R.id.fibonacciCodeDekompresi -> algorithm = 1
             }
         }
 
-        buttonKompres = view.findViewById(R.id.button_kompres)
-        buttonKompres.setOnClickListener {
+
+        buttonDekompres = view.findViewById(R.id.button_dekompres)
+        buttonDekompres.setOnClickListener {
             val time = measureTimeMillis {
-                kompresTeks()
+                dekompresTeks()
             }
-            textViewWaktuKompresi.text = "%o ms".format(time)
-        }
-
-        buttonSave = view.findViewById(R.id.button_save)
-        buttonSave.setOnClickListener {
             saveHasil()
+            textViewWaktuDekompresi.text = "%o ms".format(time)
         }
 
-        textViewResultSize = view.findViewById(R.id.textView_resultSize)
-        textViewCR = view.findViewById(R.id.textView_cr)
-        textViewWaktuKompresi = view.findViewById(R.id.textView_waktuKompresi)
+//        textViewResultSize = view.findViewById(R.id.textView_resultSize)
+//        textViewCR = view.findViewById(R.id.textView_cr)
+        textViewWaktuDekompresi = view.findViewById(R.id.textView_waktuDekompresi)
 
         return view
     }
@@ -166,7 +161,7 @@ class KompresFragment : Fragment() {
     ) {
         when (requestCode) {
             MY_REQUEST_CODE_PERMISSION -> {
-                if (grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0]== PackageManager.PERMISSION_GRANTED) {
                     doBrowseFile()
                 } else {
                     askForPermissions()
@@ -174,7 +169,7 @@ class KompresFragment : Fragment() {
                 return
             }
             MY_WRITE_REQUEST_CODE_PERMISSION -> {
-                if (grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0]== PackageManager.PERMISSION_GRANTED) {
                     doSaveFile()
                 } else {
                     saveHasil()
@@ -202,13 +197,13 @@ class KompresFragment : Fragment() {
                 if (resultCode == Activity.RESULT_OK) {
                     if (data != null) {
                         val fileUri = data.getData()
-                        originalPath = getPath(requireContext(), fileUri!!)!!
-                        originalText = readText(originalPath)
-                        originalSize = File(originalPath).length()
+                        filePath = getPath(requireContext(), fileUri!!)!!
+                        compressedText = readText(filePath)
+                        compressedSize = File(filePath).length()
 
-                        textBox.text = originalText
-                        textViewPath.text = originalPath
-                        textViewSize.text = "%.2f kb".format(originalSize / 1024.0)
+                        textBox.text = compressedText
+                        textViewPath.text = filePath
+                        textViewSize.text = "%.2f kb".format(compressedSize / 1024.0)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             textViewPath.setTextAppearance(R.style.TextAppearance_AppCompat_Body1)
                         }
@@ -306,7 +301,7 @@ class KompresFragment : Fragment() {
     }
     //endregion
 
-//    fun onCheckedChangeListener(view: View): RadioGroup.OnCheckedChangeListener? {
+//    fun onRadioButtonClicked(view: View) {
 //        if (view is RadioButton) {
 //            // Is the button now checked?
 //            val checked = view.isChecked
@@ -325,10 +320,10 @@ class KompresFragment : Fragment() {
 //        }
 //    }
 
-    private fun kompresTeks() {
-        val kompres = Kompres()
-        compressedText = kompres.kompresText(originalText, algorithm)
-        textBoxResult.text = compressedText
+    private fun dekompresTeks() {
+        val dekompres = Dekompres()
+        originalText = dekompres.dekompresText(compressedText, algorithm)
+        textBox.text = originalText
     }
 
     private fun askPermissionsToSave(): Boolean {
@@ -359,26 +354,23 @@ class KompresFragment : Fragment() {
 
     private fun doSaveFile() {
         var directory = Environment.getExternalStorageDirectory().absolutePath
-        var fullName = originalPath.substring(originalPath.lastIndexOf("/")+1)
-        var fileName = ""
-        when (algorithm) {
-            0 -> fileName = fullName.substringBeforeLast(".") + ".scf"
-            1 -> fileName = fullName.substringBeforeLast(".") + ".fcf"
-        }
+        var fullName = filePath.substring(filePath.lastIndexOf("/")+1)
+        var fileName = fullName.substringBeforeLast(".") + ".txt"
         var externalFile = File(directory, fileName)
         return try {
             val fileOutPutStream = FileOutputStream(externalFile)
-            fileOutPutStream.write(textBoxResult.text.toString().toByteArray())
-            compressedSize = File(directory + "/$fileName").length()
-            compressionRatio = originalSize * 1F / compressedSize
+            fileOutPutStream.write(originalText.toByteArray())
+            originalSize = File(directory + "/$fileName").length()
+//            compressionRatio = originalSize * 1F / compressedSize
             textViewResultSize.text = "%.2f kb".format(compressedSize / 1024.0)
-            textViewCR.text = "%.2f".format(compressionRatio)
+//            textViewCR.text = "%.2f".format(compressionRatio)
             fileOutPutStream.close()
             Toast.makeText(requireContext(), "file saved to" + directory + "/$fileName", Toast.LENGTH_LONG).show()
         } catch(e: IOException) {
             e.printStackTrace()
         }
     }
+
 //    companion object {
 //        /**
 //         * Use this factory method to create a new instance of
@@ -386,12 +378,12 @@ class KompresFragment : Fragment() {
 //         *
 //         * @param param1 Parameter 1.
 //         * @param param2 Parameter 2.
-//         * @return A new instance of fragment KompresFragment.
+//         * @return A new instance of fragment DekompresFragment.
 //         */
 //        // TODO: Rename and change types and number of parameters
 //        @JvmStatic
 //        fun newInstance(param1: String, param2: String) =
-//            KompresFragment().apply {
+//            DekompresFragment().apply {
 //                arguments = Bundle().apply {
 //                    putString(ARG_PARAM1, param1)
 //                    putString(ARG_PARAM2, param2)

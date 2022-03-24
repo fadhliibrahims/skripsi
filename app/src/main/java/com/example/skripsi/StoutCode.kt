@@ -1,4 +1,4 @@
-package com.example.testui
+package com.example.skripsi
 
 class StoutCode {
     fun pow(value: Long, exp: Int): Long {
