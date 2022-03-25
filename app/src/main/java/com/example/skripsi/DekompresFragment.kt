@@ -203,7 +203,7 @@ class DekompresFragment : Fragment() {
 
                         textBox.text = compressedText
                         textViewPath.text = filePath
-                        textViewSize.text = "%.2f kb".format(compressedSize / 1024.0)
+                        textViewSize.text = "%d bytes".format(compressedSize)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             textViewPath.setTextAppearance(R.style.TextAppearance_AppCompat_Body1)
                         }
@@ -362,7 +362,7 @@ class DekompresFragment : Fragment() {
             fileOutPutStream.write(originalText.toByteArray())
             originalSize = File(directory + "/$fileName").length()
 //            compressionRatio = originalSize * 1F / compressedSize
-            textViewResultSize.text = "%.2f kb".format(compressedSize / 1024.0)
+            textViewResultSize.text = "%d bytes".format(compressedSize)
 //            textViewCR.text = "%.2f".format(compressionRatio)
             fileOutPutStream.close()
             Toast.makeText(requireContext(), "file saved to" + directory + "/$fileName", Toast.LENGTH_LONG).show()
