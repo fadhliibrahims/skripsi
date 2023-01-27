@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Project/Skripsi/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Project/Skripsi/app/src/main/res/layout/fragment_dekompres.xml" value="0.25" />
+        <entry key="..\:/Project/Skripsi/app/src/main/res/layout/fragment_kompres.xml" value="0.25" />
+        <entry key="..\:/Project/Skripsi/app/src/main/res/menu/main_menu.xml" value="0.25" />
         <entry key="..\:/Users/orange/AndroidStudioProjects/Skripsi/app/src/main/res/layout/fragment_dekompres.xml" value="0.33" />
         <entry key="..\:/Users/orange/AndroidStudioProjects/Skripsi/app/src/main/res/layout/fragment_kompres.xml" value="0.33" />
         <entry key="..\:/Users/orange/AndroidStudioProjects/TestUI/app/src/main/res/layout/activity_main.xml" value="0.16" />

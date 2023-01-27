@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Kompresi"
+    <item android:title="Compression"
         android:id="@+id/kompresFragment"
         android:icon="@drawable/ic_baseline_arrow_circle_down_24"/>
-    <item android:title="Dekompresi"
+    <item android:title="Decompression"
         android:id="@+id/dekompresFragment"
         android:icon="@drawable/ic_baseline_arrow_circle_up_24"/>
 </menu>
