@@ -362,7 +362,7 @@ class DekompresFragment : Fragment() {
             fileOutPutStream.write(originalText.toByteArray())
             originalSize = File(directory + "/$fileName").length()
 //            compressionRatio = originalSize * 1F / compressedSize
-            textViewResultSize.text = "%d bytes".format(compressedSize)
+            textViewResultSize.text = "%d bytes".format(originalSize)
 //            textViewCR.text = "%.2f".format(compressionRatio)
             fileOutPutStream.close()
             Toast.makeText(requireContext(), "file saved to" + directory + "/$fileName", Toast.LENGTH_LONG).show()
