@@ -20,10 +20,10 @@ class Dekompres {
 
         if (algorithm == 0) {
             //Generate Table Encoding
-            val l2 = 2
+            val l = 2
             val amountOfCode2 = charset2.length
             val stoutCode = StoutCode()
-            val stoutCodeList2 = stoutCode.generateStoutCodeList(amountOfCode2, l2)
+            val stoutCodeList2 = stoutCode.generateStoutCodeList(amountOfCode2)
             val encodingTable2 = HashMap<String, Char>()
             for(i in 0..charset2.length-1) {
                 encodingTable2[stoutCodeList2[i]] = charset2[i]
@@ -32,17 +32,17 @@ class Dekompres {
 
             //Decompression
             var counter = 0
-            var x = ""
-            var y = ""
-            var bigL = 0
+            var x: String
+            var y: String
+            var bigL: Int
             while(counter < compressedBit2.length) {
-                x = compressedBit2.substring(counter, counter+l2+1)
+                x = compressedBit2.substring(counter, counter+l+1)
 //         print("x: " + x + "   ")
-                y = compressedBit2.substring(counter, counter+l2)
+                y = compressedBit2.substring(counter, counter+l)
 //         println("y: " + y)
-                counter = counter + l2+1
+                counter = counter + l+1
                 while(encodingTable2.containsKey(x)==false) {
-                    bigL = binaryToDecimal(y.toLong()) + 1 + l2
+                    bigL = binaryToDecimal(y.toLong()) + 1 + l
 //             println("bigL: " + bigL)
                     x = x + compressedBit2.substring(counter, counter+bigL)
 //             print("x: " + x + "   ")

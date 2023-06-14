@@ -9,30 +9,30 @@ class StoutCode {
         }
     }
 
-    fun generateStoutCodeList(amountOfCode: Int, l: Int): ArrayList<String> {
+    fun generateStoutCodeList(amountOfCode: Int): ArrayList<String> {
         var codeList = ArrayList<String>()
-        if (amountOfCode>0 && l>=2) {
+        val l = 2
+        if (amountOfCode>0) {
             for(n in 1..amountOfCode) {
                 if (n>=pow(2, l)) {
-                    //L = n.toBinaryString().length
                     val L = n.toString(2).length
-                    //str = n.toBinaryString(L)
+                    println("L = $L")
                     val str = n.toString(2).padStart(L, '0')
-                    //m = L-1-l
+                    println("str = $str")
                     var m = L-1-l
-
+                    println("m = L-1-l = $m")
                     while(m>=pow(2, l)) {
-                        //L = m.toBinaryString().length
                         val L = m.toString(2).length
-                        //str = m.toBinaryString(L)
+                        println("L = $L")
                         val str = m.toString(2).padStart(L, '0')
-                        //m = L
+                        println("str = $str")
                         m = L
+                        println("m = L = $m")
                     }
-
+                    println("Kode = " + m.toString(2).padStart(l, '0') + str + '0')
                     codeList.add(m.toString(2).padStart(l, '0') + str + '0')
                 } else {
-                    //codelist[n] = n.toBinaryString(l)
+                    println("Kode = " + n.toString(2).padStart(l, '0') + '0')
                     codeList.add(n.toString(2).padStart(l, '0') + '0')
                 }
             }

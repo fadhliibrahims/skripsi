@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Project/Skripsi/app/src/main/res/drawable/ic_baseline_arrow_circle_down_24.xml" value="0.144" />
         <entry key="..\:/Project/Skripsi/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Project/Skripsi/app/src/main/res/layout/fragment_dekompres.xml" value="0.264" />
         <entry key="..\:/Project/Skripsi/app/src/main/res/layout/fragment_kompres.xml" value="0.25" />

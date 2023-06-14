@@ -12,7 +12,7 @@ class Kompres {
         if (algorithm == 0) {
             //Generate Stout Code
             val stoutCode = StoutCode()
-            val stoutCodeList = stoutCode.generateStoutCodeList(charset.size, 2)
+            val stoutCodeList = stoutCode.generateStoutCodeList(charset.size)
 
             //Create Encoding Table
             val encodingTable = HashMap<Char, String>()
