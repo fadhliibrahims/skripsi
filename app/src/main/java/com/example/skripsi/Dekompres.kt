@@ -3,7 +3,8 @@ package com.example.skripsi
 class Dekompres {
     fun dekompresText(compressedText: String, algorithm: Int): String {
         //Get Charset from Compressed Text
-        var decompressedText = ""
+//        var decompressedText = ""
+        val decompressedText = StringBuilder()
         val parts = compressedText.split("|*|")
 
         val compressedText2 = parts[0]
@@ -37,20 +38,25 @@ class Dekompres {
             var bigL: Int
             while(counter < compressedBit2.length) {
                 x = compressedBit2.substring(counter, counter+l+1)
-//         print("x: " + x + "   ")
+         print("x: " + x + "   ")
                 y = compressedBit2.substring(counter, counter+l)
-//         println("y: " + y)
+         println("y: " + y)
                 counter = counter + l+1
                 while(encodingTable2.containsKey(x)==false) {
                     bigL = binaryToDecimal(y.toLong()) + 1 + l
-//             println("bigL: " + bigL)
+             println("bigL: " + bigL)
+                    if (bigL == 7) {
+                        bigL = 1
+                    }
                     x = x + compressedBit2.substring(counter, counter+bigL)
-//             print("x: " + x + "   ")
-                    y = compressedBit2.substring(counter-1, counter+bigL-1)
-//             println("y: " + y)
+             print("x: " + x + "   ")
+//                    y = compressedBit2.substring(counter-1, counter+bigL-1)
+                    y = compressedBit2.substring(counter-1, counter-1+binaryToDecimal(y.toLong()))
+             println("y: " + y)
                     counter = counter + bigL
                 }
-                decompressedText = decompressedText + encodingTable2[x]
+                println(x + ": " + encodingTable2[x])
+                decompressedText.append(encodingTable2[x])
 //         println(decompressedText)
             }
 
@@ -76,7 +82,7 @@ class Dekompres {
             while(charCounter <= compressedBit2.length) {
 //            println("String Bit " + stringBit)
                 if(stringBit.substring(stringBit.length-2, stringBit.length) == "11") {
-                    decompressedText = decompressedText + encodingTable2.getValue(stringBit).toString()
+                    decompressedText.append(encodingTable2.getValue(stringBit).toString())
 //                println(decompressedText)
                     if(charCounter < compressedBit2.length) {
                         stringBit = compressedBit2.substring(charCounter, charCounter+2)
@@ -99,48 +105,18 @@ class Dekompres {
 //        //Convert compressedBit to Text
 //        var compressedText = asciiToText(compressedBit) + "|*|" + sortedCharset.joinToString("")
 
-        return decompressedText
+        return decompressedText.toString()
     }
 
     private fun textToAscii(text: String): String {
-        var asciiStringBit = ""
-        for(char in text) {
-            asciiStringBit += char.code.toString(2).padStart(8, '0')
+//        var asciiStringBit = ""
+        val asciiStringBit = StringBuilder()
+        for(t in text) {
+            asciiStringBit.append(t.code.toString(2).padStart(8, '0'))
         }
-        return asciiStringBit
+        return asciiStringBit.toString()
     }
 
-    private fun asciiToText(asciiStringBit: String): String {
-        var text = ""
-        var asciiCode = ""
-        for(char in asciiStringBit) {
-            asciiCode = asciiCode + char
-            if(asciiCode.length == 8) {
-                text = text + Integer.parseInt(asciiCode, 2).toChar().toString()
-                asciiCode = ""
-            }
-        }
-        return text
-    }
-
-    private fun getCharsetFromText(text: String): ArrayList<Char> {
-        var charset = ArrayList<Char>()
-        for(char in text) {
-            if(!charset.contains(char)) {
-                charset.add(char)
-            }
-        }
-        return charset
-    }
-
-    private fun getFreqOfEachCharFromText(text: String, charset: ArrayList<Char>): ArrayList<Int> {
-        var freqList = ArrayList<Int>()
-        for(char in charset) {
-            val charFreq = text.split(char).size - 1
-            freqList.add(charFreq)
-        }
-        return freqList
-    }
 
     private fun binaryToDecimal(num: Long): Int {
         var num = num
@@ -157,24 +133,4 @@ class Dekompres {
         return decimal
     }
 
-
-    private fun insertionSort(charset: ArrayList<Char>, freqList:ArrayList<Int>): ArrayList<Char>{
-        if (freqList.isEmpty() || freqList.size<2){
-            return charset
-        }
-        for (count in 1..freqList.count() - 1){
-            // println(items)
-            val freq = freqList[count]
-            val char = charset[count]
-            var i = count
-            while (i>0 && freq > freqList[i - 1]){
-                freqList[i] = freqList[i - 1]
-                charset[i] = charset[i - 1]
-                i -= 1
-            }
-            freqList[i] = freq
-            charset[i] = char
-        }
-        return charset
-    }
 }

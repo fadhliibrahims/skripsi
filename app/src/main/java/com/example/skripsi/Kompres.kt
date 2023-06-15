@@ -3,11 +3,11 @@ package com.example.skripsi
 class Kompres {
 
     fun kompresText(text: String, algorithm: Int): String {
-        val asciiStringBit = textToAscii(text)
         val charset = getCharsetFromText(text)
         val freqList = getFreqOfEachCharFromText(text, charset)
         val sortedCharset = insertionSort(charset, freqList)
-        var compressedBit = ""
+//        var compressedBit = ""
+        val compressedBit = StringBuilder()
 
         if (algorithm == 0) {
             //Generate Stout Code
@@ -21,8 +21,12 @@ class Kompres {
             }
 
             //Compression
-            for(i in 0..text.length-1) {
-                compressedBit = compressedBit + encodingTable[text[i]]
+//            for(i in 0..text.length-1) {
+//                compressedBit = compressedBit + encodingTable[text[i]]
+//            }
+//            text.forEach { compressedBit = compressedBit + encodingTable[it] }
+            for (t in text) {
+                compressedBit.append(encodingTable[t])
             }
         } else if (algorithm == 1) {
             //Generate Fibonacci Code
@@ -36,8 +40,11 @@ class Kompres {
             }
 
             //Compression
-            for(i in 0..text.length-1) {
-                compressedBit = compressedBit + encodingTable[text[i]]
+//            for(i in 0..text.length-1) {
+//                compressedBit = compressedBit + encodingTable[text[i]]
+//            }
+            for (t in text) {
+                compressedBit.append(encodingTable[t])
             }
         }
 
@@ -45,32 +52,30 @@ class Kompres {
         val padLength = 8-(compressedBit.length%8)
         val paddingBit = "0".repeat(padLength)
         val flagBit = padLength.toString(2).padStart(8, '0')
-        compressedBit = compressedBit + paddingBit + flagBit
+//        compressedBit = compressedBit + paddingBit + flagBit
+        compressedBit.append(paddingBit + flagBit)
         //Convert compressedBit to Text
-        var compressedText = asciiToText(compressedBit) + "|*|" + sortedCharset.joinToString("")
+//        var compressedText = asciiToText(compressedBit) + "|*|" + sortedCharset.joinToString("")
+        var compressedText = asciiToText(compressedBit.toString()) + "|*|" + sortedCharset.joinToString("")
 
         return compressedText
     }
 
-    private fun textToAscii(text: String): String {
-        var asciiStringBit = ""
-        for(char in text) {
-            asciiStringBit += char.code.toString(2).padStart(8, '0')
-        }
-        return asciiStringBit
-    }
-
     private fun asciiToText(asciiStringBit: String): String {
-        var text = ""
+//        var text = ""
+        val text = StringBuilder()
         var asciiCode = ""
-        for(char in asciiStringBit) {
-            asciiCode = asciiCode + char
-            if(asciiCode.length == 8) {
-                text = text + Integer.parseInt(asciiCode, 2).toChar().toString()
-                asciiCode = ""
-            }
+//        for(char in asciiStringBit) {
+//            asciiCode = asciiCode + char
+//            if(asciiCode.length == 8) {
+//                text = text + Integer.parseInt(asciiCode, 2).toChar().toString()
+//                asciiCode = ""
+//            }
+//        }
+        asciiStringBit.chunked(8).forEach {
+            text.append(Integer.parseInt(it, 2).toChar().toString())
         }
-        return text
+        return text.toString()
     }
 
     private fun getCharsetFromText(text: String): ArrayList<Char> {
